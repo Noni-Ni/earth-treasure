@@ -25,4 +25,20 @@ homeRouter.get('/catalog/:id', async (req, res) => {
     const hasLiked = Boolean(stone.likedList.find(l => req.user?._id == l.toString()));
     res.render('details', { stone, isOwner, hasLiked});
 });
+homeRouter.get('/search', async (req, res) => {
+    
+    const stones = await getAll();
+    res.render('search', { stones});
+});
+
+homeRouter.post('/search', async (req, res) => {
+    let search = req.body.search;
+
+    let stones = await getAll();
+    if (search) {
+
+        stones = stones.filter((el) => el.name.toLowerCase().includes(search.toLowerCase()));
+    }
+    res.render('search', { stones});
+});
 module.exports = { homeRouter }
