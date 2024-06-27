@@ -79,7 +79,7 @@ async function likeStone(stoneId, userId) {
     return record;
 }
 
-//TODO add function to only update likes
+
 
 async function deleteById(id, userId) {
     const record = await Stone.findById(id);
@@ -95,6 +95,16 @@ async function deleteById(id, userId) {
     await Stone.findByIdAndDelete(id);
 }
 
+async function searchFor(name){
+    let query = {};
+
+    if(name){
+        query.name = new RegExp(name, 'i');
+    }
+    
+    return Stone.find(query).lean();
+}
+
 module.exports = {
     getAll,
     getById,
@@ -102,5 +112,6 @@ module.exports = {
     update,
     deleteById,
     getRecent,
-    likeStone
+    likeStone,
+    searchFor
 }

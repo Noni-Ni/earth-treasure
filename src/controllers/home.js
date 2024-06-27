@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { getRecent, getAll, getById } = require("../services/stone");
+const { getRecent, getAll, getById, searchFor } = require("../services/stone");
 
 const homeRouter = Router();
 
@@ -27,18 +27,16 @@ homeRouter.get('/catalog/:id', async (req, res) => {
 });
 homeRouter.get('/search', async (req, res) => {
     
-    const stones = await getAll();
-    res.render('search', { stones});
-});
-
-homeRouter.post('/search', async (req, res) => {
-    let search = req.body.search;
-
-    let stones = await getAll();
-    if (search) {
-
-        stones = stones.filter((el) => el.name.toLowerCase().includes(search.toLowerCase()));
+    let { name } = req.query;
+    let stones = [];
+    if(name){
+        stones = await searchFor(name);
+    }else{
+        stones = await getAll();
     }
+
     res.render('search', { stones});
 });
+
+
 module.exports = { homeRouter }
